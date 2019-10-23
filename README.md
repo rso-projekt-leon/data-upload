@@ -14,3 +14,12 @@ Build the image:
 
 Run the container as deamon on port 5000:
 `docker run -d -p 5000:5000 data-upload-microservice`
+
+
+#### TODOji
+- dodaj host pri app zagonu v konfig, localhost, izven dockerja, 0.0.0.0 v dockerju
+
+
+#### Dodatno
+- pip install pytest-flake8
+- pytest --flake8

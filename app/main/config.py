@@ -16,7 +16,8 @@ class DevelopmentConfig(Config):
     # SQLALCHEMY_DATABASE_URI = postgres_local_base
     SECRET_KEY = "secret key"
     DEBUG = True
-    UPLOAD_FOLDER = '/home/leons/data-platform/data-upload/app/tests/temp_data'
+    #UPLOAD_FOLDER = '/home/leons/data-platform/data-upload/app/tests/temp_data'
+    UPLOAD_FOLDER = '/flask-app'
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
     ALLOWED_EXTENSIONS = set(['csv', 'txt'])
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'flask_boilerplate_main.db')
