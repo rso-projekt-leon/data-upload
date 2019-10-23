@@ -15,6 +15,10 @@ Build the image:
 Run the container as deamon on port 5000:
 `docker run -d -p 5000:5000 data-upload-microservice`
 
+### Push the image to DockerHub
+- docker tag 3db6288b6b26 leon11sj/data-upload-microservice:version-1.0.0
+- docker push leon11sj/data-upload-microservice
+
 
 #### TODOji
 - dodaj host pri app zagonu v konfig, localhost, izven dockerja, 0.0.0.0 v dockerju
