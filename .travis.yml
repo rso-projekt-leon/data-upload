@@ -1,6 +1,10 @@
 sudo: required
+language: python
+
 services:
   - docker
+
+before_install:
 
 # env:
 #   global:
@@ -12,6 +16,10 @@ services:
 
 # script:
 #     - docker-compose run django python manage.py test polls
-
-script:
+before_install:
   - docker-compose up -d --build
+script:
+  - docker-compose exec upload pytest "app/tests" -p no:warnings
+
+after_script:
+  - docker rm -f app  

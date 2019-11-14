@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rso-projekt-leon/data-upload.svg?branch=master)](https://travis-ci.org/rso-projekt-leon/data-upload)
+
 # data-upload
 Data upload microservice.
 
@@ -18,6 +20,9 @@ Start container:
 
 Stop container:
 - `docker-compose down -v`
+
+### Testing
+- `docker-compose exec upload  pytest "app/tests" -p no:warnings"`
 
 ## Endpoints
 ### Info
