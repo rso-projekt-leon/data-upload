@@ -14,7 +14,7 @@ class Info(Resource):
                            "https://github.com/rso-projekt-leon/data-storage-service",
                            "https://github.com/rso-projekt-leon/data-catalog",
                            "https://github.com/rso-projekt-leon/documentation"],
-                "travis": [""],
+                "travis": ["https://travis-ci.org/rso-projekt-leon/data-upload"],
                 "dockerhub": [""]
                 }
 

@@ -15,5 +15,7 @@ RUN pip install -r requirements.txt
 # add app
 COPY . /usr/src/app
 
+EXPOSE 5000
+
 # run entrypoint.sh
 RUN ["chmod","+x","/usr/src/app/entrypoint.sh"]
