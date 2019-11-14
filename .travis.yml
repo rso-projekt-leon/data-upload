@@ -1,0 +1,17 @@
+sudo: required
+services:
+  - docker
+
+# env:
+#   global:
+#     - DOCKER_IMAGE=jmezna/rso-image-catalog:1.0.0-SNAPSHOT-$TRAVIS_JOB_NUMBER  
+# before_install:
+#     - docker-compose up   -d
+#     - docker ps
+
+
+# script:
+#     - docker-compose run django python manage.py test polls
+
+script:
+  - docker-compose up -d --build

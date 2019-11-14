@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  upload:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ['/usr/src/app/entrypoint.sh']
+    volumes:
+      - '.:/usr/src/app'
+    ports:
+      - 8081:5000
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=app.config.DevelopmentConfig
