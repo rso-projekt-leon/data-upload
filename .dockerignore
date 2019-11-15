@@ -6,3 +6,5 @@ Dockerfile.prod
 .vscode
 .travis.yml
 README.md
+.env.prod
+docker-compose.prod.yml 

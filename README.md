@@ -21,8 +21,20 @@ Start container:
 Stop container:
 - `docker-compose down -v`
 
-### Testing
+Port:8081
+
+## Testing
 - `docker-compose exec upload  pytest "app/tests" -p no:warnings"`
+
+## Production
+Run:
+- `docker-compose -f docker-compose.prod.yml up -d --build`
+
+Stop:
+- ` docker-compose -f docker-compose.prod.yml down -v`
+
+Logs:
+- `docker-compose -f docker-compose.prod.yml logs -f`
 
 ## Endpoints
 ### Info

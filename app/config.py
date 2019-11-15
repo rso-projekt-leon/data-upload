@@ -23,5 +23,5 @@ class TestingConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     """Production configuration"""
-    pass
+    UPLOAD_FOLDER = '/home/app'
 
