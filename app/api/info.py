@@ -16,7 +16,7 @@ class Info(Resource):
                            "https://github.com/rso-projekt-leon/documentation"],
                 "travis": ["https://travis-ci.org/rso-projekt-leon/data-upload"],
                 "dockerhub": [""]
-                }
+                }, 200
 
 
 api.add_resource(Info, "/v1/demo/info")

@@ -1,8 +1,13 @@
 import os
-from flask import request
+
+from flask import Blueprint, request
 from flask import current_app as app
+from flask_restful import Api, Resource
 from werkzeug.utils import secure_filename
-from flask_restful import Resource
+
+upload_blueprint = Blueprint("upload", __name__)
+api = Api(upload_blueprint)
+
 
 def allowed_file(file):
     filename = file.filename
@@ -17,9 +22,19 @@ def allowed_file(file):
     if ext.lower() in app.config["ALLOWED_EXTENSIONS"]:
         return True
     else:
-        return False    
+        return False 
+
 
 class UploadFile(Resource):
+    def get(self):
+        response_object = {
+                    "status": "success",
+                    "data": {
+                        "api": "POST /v1/upload/dataset"
+                    }
+                }
+        return response_object, 200
+
     def post(self):
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -41,3 +56,4 @@ class UploadFile(Resource):
         else:
             return {'message' : 'Allowed file type is .csv'}, 400
 
+api.add_resource(UploadFile, "/v1/upload/dataset")

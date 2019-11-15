@@ -6,6 +6,8 @@ class BaseConfig:
 
     TESTING = False
     SECRET_KEY = "my_precious"
+    ALLOWED_EXTENSIONS = ('csv')
+    UPLOAD_FOLDER = '/home'
 
 
 class DevelopmentConfig(BaseConfig):
