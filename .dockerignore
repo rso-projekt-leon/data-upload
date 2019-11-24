@@ -8,3 +8,4 @@ Dockerfile.prod
 README.md
 .env.prod
 docker-compose.prod.yml 
+kubernetes

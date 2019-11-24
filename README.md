@@ -36,10 +36,15 @@ Stop:
 Logs:
 - `docker-compose -f docker-compose.prod.yml logs -f`
 
+## Kubernetes
+Apply:
+- `kubectl apply -f kubernetes/data-upload-deployment.yaml`
+
 ## Endpoints
 ### Info
 Informacije o projektu:
 - `/v1/demo/info`
 
+### Upload
 Nalaganje dataseta:
 - `/v1/upload/dataset`

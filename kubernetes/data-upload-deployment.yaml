@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-upload-deployment
+  labels:
+    app: data-upload
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: data-upload
+  template:
+    metadata:
+      labels:
+        app: data-upload
+    spec:
+      containers: 
+      - image: leon11sj/data-upload-microservice:version-1.3.0-6.1
+        name: data-upload
+        command: ["gunicorn"]
+        args: ["--bind", "0.0.0.0:5000", "manage:app"]
+        env:
+        - name: FLASK_ENV
+          value: "production"
+        - name: APP_SETTINGS
+          value: "app.config.ProductionConfig"
+        - name: FLASK_APP
+          value: app/__init__.py
+        ports:
+        - containerPort: 5000
+          name: server
+          protocol: TCP
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-upload
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8081
+    protocol: TCP
+    targetPort: server
+  selector:
+    app: data-upload
