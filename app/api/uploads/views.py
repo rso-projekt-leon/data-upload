@@ -29,9 +29,7 @@ class UploadFile(Resource):
     def get(self):
         response_object = {
                     "status": "success",
-                    "data": {
-                        "api": "POST /v1/upload/dataset"
-                    }
+                    "message" : "Upload service up."
                 }
         return response_object, 200
 
@@ -56,4 +54,4 @@ class UploadFile(Resource):
         else:
             return {'message' : 'Allowed file type is .csv'}, 400
 
-api.add_resource(UploadFile, "/v1/upload/dataset")
+api.add_resource(UploadFile, "/v1/upload")
