@@ -12,7 +12,7 @@ class BaseConfig:
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration"""
-    pass
+    CATALOG_URL = 'http://data-catalog:5000/v1/datasets'
 
 
 class TestingConfig(BaseConfig):
