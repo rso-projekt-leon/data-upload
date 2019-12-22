@@ -15,7 +15,7 @@ spec:
         app: data-upload
     spec:
       containers: 
-      - image: leon11sj/data-upload-microservice:version-1.3.0-9.1
+      - image: leon11sj/data-upload-microservice:version-1.4.0-12.1
         name: data-upload
         command: ["gunicorn"]
         args: ["--bind", "0.0.0.0:5000", "manage:app"]

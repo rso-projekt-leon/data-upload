@@ -12,7 +12,7 @@ class BaseConfig:
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration"""
-    CATALOG_URL = 'http://data-catalog:5000/v1/datasets'
+    DATA_CATALOG_URL = 'http://data-catalog:5000'
 
 
 class TestingConfig(BaseConfig):
@@ -22,6 +22,6 @@ class TestingConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     """Production configuration"""
-    UPLOAD_FOLDER = '/home'
+    UPLOAD_FOLDER = '/home/app/app'
     DATA_CATALOG_URL = os.environ.get("DATA_CATALOG_URL")
 
