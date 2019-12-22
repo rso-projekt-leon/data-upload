@@ -17,11 +17,11 @@ class DevelopmentConfig(BaseConfig):
 
 class TestingConfig(BaseConfig):
     """Testing configuration"""
-
     TESTING = True
 
 
 class ProductionConfig(BaseConfig):
     """Production configuration"""
-    UPLOAD_FOLDER = '/home/app'
+    UPLOAD_FOLDER = '/home'
+    DATA_CATALOG_URL = os.environ.get("DATA_CATALOG_URL")
 

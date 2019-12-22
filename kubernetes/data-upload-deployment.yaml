@@ -26,6 +26,8 @@ spec:
           value: "app.config.ProductionConfig"
         - name: FLASK_APP
           value: app/__init__.py
+        - name: DATA_CATALOG_URL
+          value: "http://data-catalog:8083"  
         ports:
         - containerPort: 5000
           name: server

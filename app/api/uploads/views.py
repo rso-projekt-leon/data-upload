@@ -34,7 +34,7 @@ def update_data_catalog_info(dataset_name, file_name, file_size, num_lines):
                     "dataset_name": dataset_name,
                     "file_name": file_name,
                     }
-        catalog_url = app.config['CATALOG_URL']
+        catalog_url = app.config['DATA_CATALOG_URL'] + '/v1/datasets'
         headers = {'Content-type': 'application/json'}
         r_catalog = requests.post(catalog_url, data=json.dumps(catalog_post_data), headers=headers)
         print(r_catalog.text)
