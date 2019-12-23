@@ -31,11 +31,25 @@ spec:
         - name: CONFIG_ETCD_HOST_IP
           value: etcd
         - name: CONFIG_ETCD_HOST_PORT
-          value: "2379"        
+          value: "2379"
+        - name: HEALTH_DEMO_STATUS
+          value: "True"     
         ports:
         - containerPort: 5000
           name: server
           protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: server
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: server
+          initialDelaySeconds: 30
+          periodSeconds: 10
 ---
 
 apiVersion: v1

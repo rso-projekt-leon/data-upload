@@ -36,6 +36,17 @@ class DevelopmentConfig(BaseConfig):
         except:
             return os.environ.get("DATA_CATALOG_URL")
 
+    @property
+    def HEALTH_DEMO_STATUS(self):         
+        try:
+            if self.CONFIG_ETCD_HOST_IP==None or self.CONFIG_ETCD_HOST_PORT== None:
+                return os.environ.get("HEALTH_DEMO_STATUS")
+            else:
+                client = etcd.Client(host=self.CONFIG_ETCD_HOST_IP, port=int(self.CONFIG_ETCD_HOST_PORT))
+                return client.read('/data-upload/catalog-url').value
+        except:
+            return os.environ.get("HEALTH_DEMO_STATUS")        
+
 
 class TestingConfig(BaseConfig):
     """Testing configuration"""
@@ -58,3 +69,14 @@ class ProductionConfig(BaseConfig):
                 return client.read('/data-upload/catalog-url').value
         except:
             return os.environ.get("DATA_CATALOG_URL")
+
+    @property
+    def HEALTH_DEMO_STATUS(self):         
+        try:
+            if self.CONFIG_ETCD_HOST_IP==None or self.CONFIG_ETCD_HOST_PORT== None:
+                return os.environ.get("HEALTH_DEMO_STATUS")
+            else:
+                client = etcd.Client(host=self.CONFIG_ETCD_HOST_IP, port=int(self.CONFIG_ETCD_HOST_PORT))
+                return client.read('/data-upload/catalog-url').value
+        except:
+            return os.environ.get("HEALTH_DEMO_STATUS")
