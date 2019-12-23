@@ -3,7 +3,9 @@ import os
 from flask import Flask
 from werkzeug.utils import import_string
 from healthcheck import HealthCheck
-
+from prometheus_client import make_wsgi_app
+from flask_prometheus_metrics import register_metrics
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 # instantiate the extensions
 health_live = HealthCheck()
@@ -40,3 +42,10 @@ def create_app(script_info=None):
         return {"app": app}
 
     return app
+
+
+def create_metrics(app):
+    app_mode = os.getenv("FLASK_ENV")
+    register_metrics(app, app_version="v1.4.151", app_config=app_mode)
+    dispatcher = DispatcherMiddleware(app.wsgi_app, {"/metrics": make_wsgi_app()})
+    return dispatcher
