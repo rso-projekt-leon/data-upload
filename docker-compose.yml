@@ -13,6 +13,7 @@ services:
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=app.config.DevelopmentConfig
+      - DATA_CATALOG_URL=http://data-catalog:5000
     networks:
       - backend
 networks:

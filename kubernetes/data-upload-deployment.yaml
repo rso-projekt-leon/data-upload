@@ -15,7 +15,7 @@ spec:
         app: data-upload
     spec:
       containers: 
-      - image: leon11sj/data-upload-microservice:version-1.4.0-12.1
+      - image: leon11sj/data-upload-microservice:version-1.4.0-14.1
         name: data-upload
         command: ["gunicorn"]
         args: ["--bind", "0.0.0.0:5000", "manage:app"]
@@ -27,7 +27,11 @@ spec:
         - name: FLASK_APP
           value: app/__init__.py
         - name: DATA_CATALOG_URL
-          value: "http://data-catalog:8083"  
+          value: "http://data-catalog:8083"
+        - name: CONFIG_ETCD_HOST_IP
+          value: etcd
+        - name: CONFIG_ETCD_HOST_PORT
+          value: "2379"        
         ports:
         - containerPort: 5000
           name: server

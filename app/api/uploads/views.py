@@ -7,6 +7,8 @@ from flask import current_app as app
 from flask_restful import Api, Resource
 from werkzeug.utils import secure_filename
 
+from app.config import get_etcd_config
+
 upload_blueprint = Blueprint("upload", __name__)
 api = Api(upload_blueprint)
 
@@ -34,11 +36,15 @@ def update_data_catalog_info(dataset_name, file_name, file_size, num_lines):
                     "dataset_name": dataset_name,
                     "file_name": file_name,
                     }
-        catalog_url = app.config['DATA_CATALOG_URL'] + '/v1/datasets'
+
+        catalog_adderss = get_etcd_config('/data-upload/catalog-url', 'DATA_CATALOG_URL')         
+        catalog_url = catalog_adderss + '/v1/datasets'
         headers = {'Content-type': 'application/json'}
-        r_catalog = requests.post(catalog_url, data=json.dumps(catalog_post_data), headers=headers)
-        print(r_catalog.text)
-        return r_catalog.status_code
+        try:
+            r_catalog = requests.post(catalog_url, data=json.dumps(catalog_post_data), headers=headers)
+            return r_catalog.status_code
+        except:
+            return 400
 
 class UploadFile(Resource):
     def get(self):

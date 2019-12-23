@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from werkzeug.utils import import_string
 
 
 def create_app(script_info=None):
@@ -9,7 +10,8 @@ def create_app(script_info=None):
 
     # set config
     app_settings = os.getenv("APP_SETTINGS")
-    app.config.from_object(app_settings)
+    cfg = import_string(app_settings)()
+    app.config.from_object(cfg)
 
     # register blueprints
     from app.api.info import info_blueprint

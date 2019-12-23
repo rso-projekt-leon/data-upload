@@ -1,9 +1,19 @@
 import os
+import etcd
+from flask import current_app as app
 
+def get_etcd_config(key, fail_env_var):
+    try:
+        client = etcd.Client(host=app.config['CONFIG_ETCD_HOST_IP'], port=int(app.config['CONFIG_ETCD_HOST_PORT']))
+        try:
+            return client.read(key).value
+        except etcd.EtcdKeyNotFound as e:
+            return os.environ.get(fail_env_var)
+    except:
+        return os.environ.get(fail_env_var)
 
 class BaseConfig:
     """Base configuration"""
-
     TESTING = False
     SECRET_KEY = "my_precious"
     ALLOWED_EXTENSIONS = ('csv')
@@ -12,7 +22,19 @@ class BaseConfig:
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration"""
-    DATA_CATALOG_URL = 'http://data-catalog:5000'
+    CONFIG_ETCD_HOST_IP = 'etcd'
+    CONFIG_ETCD_HOST_PORT = 2379
+
+    @property
+    def DATA_CATALOG_URL(self):         
+        try:
+            if self.CONFIG_ETCD_HOST_IP==None or self.CONFIG_ETCD_HOST_PORT== None:
+                return os.environ.get("DATA_CATALOG_URL")
+            else:
+                client = etcd.Client(host=self.CONFIG_ETCD_HOST_IP, port=int(self.CONFIG_ETCD_HOST_PORT))
+                return client.read('/data-upload/catalog-url').value
+        except:
+            return os.environ.get("DATA_CATALOG_URL")
 
 
 class TestingConfig(BaseConfig):
@@ -23,5 +45,16 @@ class TestingConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     """Production configuration"""
     UPLOAD_FOLDER = '/home/app/app'
-    DATA_CATALOG_URL = os.environ.get("DATA_CATALOG_URL")
+    CONFIG_ETCD_HOST_IP = os.environ.get("CONFIG_ETCD_HOST_IP")
+    CONFIG_ETCD_HOST_PORT = os.environ.get("CONFIG_ETCD_HOST_PORT") 
 
+    @property
+    def DATA_CATALOG_URL(self):         
+        try:
+            if self.CONFIG_ETCD_HOST_IP==None or self.CONFIG_ETCD_HOST_PORT== None:
+                return os.environ.get("DATA_CATALOG_URL")
+            else:
+                client = etcd.Client(host=self.CONFIG_ETCD_HOST_IP, port=int(self.CONFIG_ETCD_HOST_PORT))
+                return client.read('/data-upload/catalog-url').value
+        except:
+            return os.environ.get("DATA_CATALOG_URL")

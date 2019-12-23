@@ -3,3 +3,4 @@ Flask-RESTful==0.3.7
 pytest==5.0.1
 gunicorn==19.9.0
 requests==2.22.0
+python-etcd==0.4.5
