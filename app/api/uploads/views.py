@@ -18,6 +18,9 @@ def allowed_file(file):
     # We only want files with a . in the filename
     if not "." in filename:
         return False
+    
+    if " " in filename:
+        return False
 
     # Split the extension from the filename
     ext = filename.rsplit(".", 1)[1]
@@ -46,6 +49,15 @@ def update_data_catalog_info(dataset_name, file_name, file_size, num_lines):
         except:
             return 400
 
+def save_file_to_s3(file, filename, dataset_name):
+    files = {'file': (filename, file.read(), dataset_name)}
+    data_storage_url = get_etcd_config('/data-upload/storage-url', 'DATA_STORAGE_URL')  + '/v1/files'
+    try:
+        r_data_storage = requests.post(data_storage_url, files=files)
+        return (r_data_storage.text, r_data_storage.status_code)
+    except:
+        return ('data_storage_service not aviable', 400)
+
 class UploadFile(Resource):
     def get(self):
         response_object = {
@@ -70,17 +82,41 @@ class UploadFile(Resource):
         # Ensuring the filesize is allowed
         if allowed_file(file):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            file_size = os.path.getsize(os.path.join(app.config['UPLOAD_FOLDER'], filename))/(1024*1024)
-            num_lines = sum(1 for line in open(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
-            print(filename, file_size, num_lines)
             dataset_name = file.content_type
-            #doadaj file na storage, če je uspelo shrani v bazo
-            status = update_data_catalog_info(dataset_name, filename, file_size, num_lines)
-            if status == 201:
-                return {'message' : 'File successfully uploaded'}, 201
+
+            # preveri ali ima dataset name presledke
+            if " " in dataset_name:
+                return {'message' : 'Error: Dataset name has spaces.'}, 400
+
+            # preveri ali datasename že obstaja
+            try:
+                catalog_adderss = get_etcd_config('/data-upload/catalog-url', 'DATA_CATALOG_URL')         
+                catalog_url = f'{catalog_adderss}/v1/datasets/{dataset_name}'
+                dataset_status = requests.get(catalog_url)
+            except:
+                return {'message' : 'Error saving fail. (error connecting to data-catalog)'}, 400
+
+            if dataset_status.status_code == 404:
+                s3_message, s3_status_code = save_file_to_s3(file, filename, dataset_name)
+                if s3_status_code == 201:
+                    file.seek(0) # postavimo file nazaj na začetek
+                    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    file.save(file_path)
+                    file_size = os.path.getsize(file_path)/(1024*1024)
+                    num_lines = sum(1 for line in open(file_path))
+                    catalog_update_status = update_data_catalog_info(dataset_name, filename, file_size, num_lines)
+                    if catalog_update_status == 201:
+                        return {'message' : 'File successfully uploaded'}, 201
+                    else:
+                        return {'message' : 'Error adding file info to database.'}, 400
+                    try:
+                        os.remove(file_path)
+                    except:
+                        print('Error deleting file.') # add to log
+                else:
+                    return {'message' : s3_message}, 400
             else:
-                return {'message' : 'Error adding file info to database.'}, 400
+                return {'message' : 'Dataset name already used.'}, 400
         else:
             return {'message' : 'Allowed file type is .csv'}, 400
 

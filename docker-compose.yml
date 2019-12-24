@@ -14,6 +14,7 @@ services:
       - FLASK_ENV=development
       - APP_SETTINGS=app.config.DevelopmentConfig
       - DATA_CATALOG_URL=http://data-catalog:5000
+      - DATA_STORAGE_URL=http://data-storage:5000
       - HEALTH_DEMO_STATUS=True 
     networks:
       - backend

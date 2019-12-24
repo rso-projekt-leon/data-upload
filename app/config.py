@@ -26,6 +26,17 @@ class DevelopmentConfig(BaseConfig):
     CONFIG_ETCD_HOST_PORT = 2379
 
     @property
+    def DATA_STORAGE_URL(self):         
+        try:
+            if self.CONFIG_ETCD_HOST_IP==None or self.CONFIG_ETCD_HOST_PORT== None:
+                return os.environ.get("DATA_STORAGE_URL")
+            else:
+                client = etcd.Client(host=self.CONFIG_ETCD_HOST_IP, port=int(self.CONFIG_ETCD_HOST_PORT))
+                return client.read('/data-upload/storage-url').value
+        except:
+            return os.environ.get("DATA_STORAGE_URL")
+
+    @property
     def DATA_CATALOG_URL(self):         
         try:
             if self.CONFIG_ETCD_HOST_IP==None or self.CONFIG_ETCD_HOST_PORT== None:
@@ -80,3 +91,14 @@ class ProductionConfig(BaseConfig):
                 return client.read('/data-upload/catalog-url').value
         except:
             return os.environ.get("HEALTH_DEMO_STATUS")
+
+    @property
+    def DATA_STORAGE_URL(self):         
+        try:
+            if self.CONFIG_ETCD_HOST_IP==None or self.CONFIG_ETCD_HOST_PORT== None:
+                return os.environ.get("DATA_STORAGE_URL")
+            else:
+                client = etcd.Client(host=self.CONFIG_ETCD_HOST_IP, port=int(self.CONFIG_ETCD_HOST_PORT))
+                return client.read('/data-upload/storage-url').value
+        except:
+            return os.environ.get("DATA_STORAGE_URL")

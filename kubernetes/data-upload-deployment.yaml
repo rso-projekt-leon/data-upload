@@ -15,7 +15,7 @@ spec:
         app: data-upload
     spec:
       containers: 
-      - image: leon11sj/data-upload-microservice:version-1.4.0-16.1
+      - image: leon11sj/data-upload-microservice:version-1.4.0-17.1
         name: data-upload
         command: ["gunicorn"]
         args: ["--bind", "0.0.0.0:5000", "manage:dispatcher"]
@@ -28,6 +28,8 @@ spec:
           value: app/__init__.py
         - name: DATA_CATALOG_URL
           value: "http://data-catalog:8083"
+        - name: DATA_STORAGE_URL
+          value: "http://data-storage:8082"
         - name: CONFIG_ETCD_HOST_IP
           value: etcd
         - name: CONFIG_ETCD_HOST_PORT
