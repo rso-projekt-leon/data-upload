@@ -8,7 +8,7 @@ from flask_restful import Api, Resource
 from werkzeug.utils import secure_filename
 
 from app.config import get_etcd_config
-from app.log_app import info_log
+from app.log_app import info_log, error_log
 
 upload_blueprint = Blueprint("upload", __name__)
 api = Api(upload_blueprint)
@@ -73,12 +73,14 @@ class UploadFile(Resource):
         info_log(app, 'UploadFile post', 'ENTRY ', 'method call')
         # check if the post request has the file part
         if 'file' not in request.files:
+            error_log(app, 'UploadFile post', 'ERROR ', 'No file part in the request')
             return {'message' : 'No file part in the request'}, 400
 
         file = request.files['file'] 
     
         # Ensuring the file has a name
         if file.filename == '':
+            error_log(app, 'UploadFile post', 'ERROR ', 'No file selected for uploading')
             return {'message' : 'No file selected for uploading'}, 400
 
         # Ensuring the file type is allowed
@@ -90,6 +92,7 @@ class UploadFile(Resource):
 
             # preveri ali ima dataset name presledke
             if " " in dataset_name:
+                error_log(app, 'UploadFile post', 'ERROR ', 'Dataset name has spaces.')
                 return {'message' : 'Error: Dataset name has spaces.'}, 400
 
             # preveri ali datasename že obstaja
@@ -98,6 +101,7 @@ class UploadFile(Resource):
                 catalog_url = f'{catalog_adderss}/v1/datasets/{dataset_name}'
                 dataset_status = requests.get(catalog_url)
             except:
+                error_log(app, 'UploadFile post', 'ERROR ', 'Error saving fail. (error connecting to data-catalog)')
                 return {'message' : 'Error saving fail. (error connecting to data-catalog)'}, 400
 
             if dataset_status.status_code == 404:
@@ -109,20 +113,25 @@ class UploadFile(Resource):
                     file_size = os.path.getsize(file_path)/(1024*1024)
                     num_lines = sum(1 for line in open(file_path))
                     catalog_update_status = update_data_catalog_info(dataset_name, filename, file_size, num_lines)
+                    try:
+                        os.remove(file_path)
+                    except:
+                        error_log(app, 'UploadFile post', 'ERROR ', 'Error deleting file.')
+
                     if catalog_update_status == 201:
                         info_log(app, 'UploadFile post', 'EXIT ', 'method call')  
                         return {'message' : 'File successfully uploaded'}, 201
                     else:
+                        error_log(app, 'UploadFile post', 'ERROR ', 'Error adding file info to database.')
                         return {'message' : 'Error adding file info to database.'}, 400
-                    try:
-                        os.remove(file_path)
-                    except:
-                        print('Error deleting file.') # add to log
                 else:
+                    error_log(app, 'UploadFile post', 'ERROR ', s3_message)
                     return {'message' : s3_message}, 400
             else:
+                error_log(app, 'UploadFile post', 'ERROR ', 'Dataset name already used.')
                 return {'message' : 'Dataset name already used.'}, 400
         else:
+            error_log(app, 'UploadFile post', 'ERROR ', 'Allowed file type is .csv')
             return {'message' : 'Allowed file type is .csv'}, 400
 
 api.add_resource(UploadFile, "/v1/upload")
