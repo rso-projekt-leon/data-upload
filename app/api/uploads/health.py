@@ -8,7 +8,6 @@ def demo_healthcheck():
     else: 
         health_status = False
         message = "data-upload error"
-    print('Health check', health_status)
     return health_status, message
 
 def isready_healthcheck():

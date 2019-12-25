@@ -1,12 +1,15 @@
 from flask import Blueprint
 from flask_restful import Api, Resource
+from app.log_app import info_log
+from flask import current_app as app
 
 info_blueprint = Blueprint("info", __name__)
 api = Api(info_blueprint)
 
-
 class Info(Resource):
     def get(self):
+        info_log(app, 'Info get', 'ENTRY ', 'method call')
+        info_log(app, 'Info get', 'EXIT ', 'method call')
         return {"clani": ["ls4262"],
                 "opis_projekta": "Projekt implementira platformo za podatkovno analizo.",
                 "mikrostoritve": ["https://35.195.92.163/data-storage/v1/buckets/", 

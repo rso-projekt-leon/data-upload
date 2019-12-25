@@ -18,6 +18,8 @@ class BaseConfig:
     SECRET_KEY = "my_precious"
     ALLOWED_EXTENSIONS = ('csv')
     UPLOAD_FOLDER = '/home'
+    VERSION = '1.4'
+    SERVICE_NAME = 'data_upload'
 
 
 class DevelopmentConfig(BaseConfig):
@@ -54,7 +56,7 @@ class DevelopmentConfig(BaseConfig):
                 return os.environ.get("HEALTH_DEMO_STATUS")
             else:
                 client = etcd.Client(host=self.CONFIG_ETCD_HOST_IP, port=int(self.CONFIG_ETCD_HOST_PORT))
-                return client.read('/data-upload/catalog-url').value
+                return client.read('/data-upload/health-demo-status').value
         except:
             return os.environ.get("HEALTH_DEMO_STATUS")        
 
@@ -88,7 +90,7 @@ class ProductionConfig(BaseConfig):
                 return os.environ.get("HEALTH_DEMO_STATUS")
             else:
                 client = etcd.Client(host=self.CONFIG_ETCD_HOST_IP, port=int(self.CONFIG_ETCD_HOST_PORT))
-                return client.read('/data-upload/catalog-url').value
+                return client.read('/data-upload/health-demo-status').value
         except:
             return os.environ.get("HEALTH_DEMO_STATUS")
 

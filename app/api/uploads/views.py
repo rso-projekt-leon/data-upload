@@ -8,6 +8,7 @@ from flask_restful import Api, Resource
 from werkzeug.utils import secure_filename
 
 from app.config import get_etcd_config
+from app.log_app import info_log
 
 upload_blueprint = Blueprint("upload", __name__)
 api = Api(upload_blueprint)
@@ -60,13 +61,16 @@ def save_file_to_s3(file, filename, dataset_name):
 
 class UploadFile(Resource):
     def get(self):
+        info_log(app, 'UploadFile get', 'ENTRY ', 'method call')
         response_object = {
                     "status": "success",
                     "message" : "Upload service up."
                 }
+        info_log(app, 'UploadFile get', 'EXIT ', 'method call')        
         return response_object, 200
 
     def post(self):
+        info_log(app, 'UploadFile post', 'ENTRY ', 'method call')
         # check if the post request has the file part
         if 'file' not in request.files:
             return {'message' : 'No file part in the request'}, 400
@@ -106,6 +110,7 @@ class UploadFile(Resource):
                     num_lines = sum(1 for line in open(file_path))
                     catalog_update_status = update_data_catalog_info(dataset_name, filename, file_size, num_lines)
                     if catalog_update_status == 201:
+                        info_log(app, 'UploadFile post', 'EXIT ', 'method call')  
                         return {'message' : 'File successfully uploaded'}, 201
                     else:
                         return {'message' : 'Error adding file info to database.'}, 400

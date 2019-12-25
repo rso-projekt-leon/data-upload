@@ -1,4 +1,5 @@
 import os
+import logging
 
 from flask import Flask
 from werkzeug.utils import import_string
@@ -19,6 +20,12 @@ def create_app(script_info=None):
     app_settings = os.getenv("APP_SETTINGS")
     cfg = import_string(app_settings)()
     app.config.from_object(cfg)
+
+    #logging
+    if __name__ != '__main__':
+        gunicorn_logger = logging.getLogger('gunicorn.error')
+        app.logger.handlers = gunicorn_logger.handlers
+        app.logger.setLevel(gunicorn_logger.level)
 
     # register blueprints
     from app.api.info import info_blueprint
