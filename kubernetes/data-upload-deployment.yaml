@@ -18,7 +18,7 @@ spec:
       - image: leon11sj/data-upload-microservice:version-1.4.0-18.1
         name: data-upload
         command: ["gunicorn"]
-        args: ["--bind", "0.0.0.0:5000", "manage:dispatcher"]
+        args: ["--bind", "0.0.0.0:5000", "--log-level=info", "manage:dispatcher"]
         env:
         - name: FLASK_ENV
           value: "production"
